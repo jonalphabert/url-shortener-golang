@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/jonalphabert/url-shortener-golang/handler"
 	"github.com/jonalphabert/url-shortener-golang/logger"
 	"github.com/jonalphabert/url-shortener-golang/models"
@@ -29,5 +30,10 @@ func main() {
 
     // router
     r := router.UserRouter(userHandler, log)
+
+    r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
+
+    r.GET("/health", func(c *gin.Context) { c.JSON(200, gin.H{"status": "ok"}) })
+
     r.Run(":8080")
 }
