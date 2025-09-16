@@ -6,13 +6,14 @@ import (
 	"github.com/jonalphabert/url-shortener-golang/logger"
 )
 
-func UserRouter(h *handler.UserHandler, log *logger.LoggerType) *gin.Engine {
+func UserRouter(h *handler.UserHandler, u *handler.UrlHandler, log *logger.LoggerType) *gin.Engine {
     r := gin.New()
     r.Use(gin.Recovery())
     r.Use(RequestLogger(log)) // custom middleware
 
     api := r.Group("/api")
     h.RegisterRoutes(api)
+    u.RegisterRoutes(api)
 
     return r
 }
