@@ -91,5 +91,11 @@ func (s *AuthServices) Register(name string, password string) (*models.User, err
 	s.log.Infof("Original password: %s", password)
 	s.log.Infof("Hashed password: %s", string(hashedPassword))
 
-	return s.repo.Create(&models.User{Username: name, Password: string(hashedPassword)})
+	user, err := s.repo.Create(&models.User{Username: name, Password: string(hashedPassword)})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
