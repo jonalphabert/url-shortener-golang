@@ -46,14 +46,16 @@ func main() {
 
     // service
     userSvc := service.NewUserService(userRepo, log)
+    authSvc := service.NewAuthService(userRepo, log)
     // urlSvc := service.NewUrlService(urlRepo, log)
 
     // handler
     userHandler := handler.NewUserHandler(userSvc, log)
+    authHandler := handler.NewAuthHandler(authSvc, log)
     // urlHandler := handler.NewUrlHandler(urlSvc, log)
 
     // router
-    r := router.UserRouter(userHandler, log)
+    r := router.UserRouter(userHandler, authHandler, log)
     // r := router.UserRouter(userHandler, urlHandler, log)
 
     r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
