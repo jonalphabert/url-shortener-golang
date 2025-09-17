@@ -1,18 +1,36 @@
 package main
 
 import (
+	"os"
+
 	"github.com/gin-gonic/gin"
+	"github.com/jonalphabert/url-shortener-golang/internal/db"
 	"github.com/jonalphabert/url-shortener-golang/internal/handler"
 	"github.com/jonalphabert/url-shortener-golang/internal/logger"
 	"github.com/jonalphabert/url-shortener-golang/internal/models"
 	"github.com/jonalphabert/url-shortener-golang/internal/repository"
 	"github.com/jonalphabert/url-shortener-golang/internal/router"
 	"github.com/jonalphabert/url-shortener-golang/internal/service"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
     log := logger.New() // pakai logger ada
     log.Info("Starting app")
+
+    // load env
+    if err := godotenv.Load(".env"); err != nil {
+        log.Fatal(err)
+    }
+
+    // Koneksi ke DB
+    _, err := db.Connect(os.Getenv("DATABASE_URL"))
+    if err != nil {
+        log.Fatal(err)
+    } else {
+        log.Info("Connected to DB")
+    }
 
     // repository (in-memory sekarang)
     userRepo := repository.NewInMemoryUserRepo()
