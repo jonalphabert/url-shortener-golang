@@ -24,7 +24,10 @@ func (h *UrlHandler) RegisterRoutes(rg *gin.RouterGroup) {
 	rg.POST("/urls", h.Create)
 	rg.DELETE("/urls/:id", h.Delete)
 	rg.PATCH("/urls/:id", h.Update)
-	rg.GET("/u/:shortUrl", h.Redirect)
+}
+
+func (h *UrlHandler) RegisterRedirectRoutes(rg *gin.RouterGroup) {
+	rg.GET("/s/:shortUrl", h.Redirect)
 }
 
 func (h *UrlHandler) GetAll(c *gin.Context) {
@@ -50,14 +53,15 @@ func (h *UrlHandler) GetByID(c *gin.Context) {
 
 func (h *UrlHandler) Create(c *gin.Context) {
 	var body struct {
-		ShortUrl string `json:"short_url" binding:"required"` // required field
-		LongUrl  string `json:"long_url" binding:"required"`   // required field
+		UserID 		int `json:"user_id" binding:"required"` // required field	uint
+		ShortUrl 	string `json:"short_url" default:""` // required field
+		LongUrl  	string `json:"long_url" binding:"required"`   // required field
 	}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid payload"})
 		return
 	}
-	url, err := h.svc.CreateUrl(body.ShortUrl, body.LongUrl)
+	url, err := h.svc.CreateUrl(body.UserID, body.ShortUrl, body.LongUrl)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -67,12 +71,12 @@ func (h *UrlHandler) Create(c *gin.Context) {
 
 func (h *UrlHandler) Delete(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	u, err := h.svc.DeleteUrl(id)
+	err := h.svc.DeleteUrl(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "url not found"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"url": u})
+	c.JSON(http.StatusOK, gin.H{"status": "Url deleted"})
 }
 
 func (h *UrlHandler) Update(c *gin.Context) {

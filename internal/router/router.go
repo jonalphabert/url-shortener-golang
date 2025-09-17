@@ -18,16 +18,19 @@ import (
 //     return r
 // }
 
-func UserRouter(h *handler.UserHandler, authHandler *handler.AuthHandler, log *logger.LoggerType) *gin.Engine {
+func UserRouter(h *handler.UserHandler, authHandler *handler.AuthHandler, urlHandler *handler.UrlHandler, log *logger.LoggerType) *gin.Engine {
     r := gin.New()
     r.Use(gin.Recovery())
     r.Use(RequestLogger(log)) // custom middleware
 
     api := r.Group("/api")
     h.RegisterRoutes(api)
+    urlHandler.RegisterRoutes(api)
 
     apiAuth := r.Group("/auth")
     authHandler.RegisterRoutes(apiAuth)
+
+    urlHandler.RegisterRedirectRoutes(r.Group("/"))
 
     return r
 }

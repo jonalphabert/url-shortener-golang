@@ -42,20 +42,20 @@ func main() {
 
     // repository (in-memory sekarang)
     userRepo := repository.NewUserRepository(db)
-    // urlRepo := repository.NewInMemoryUrlRepo()
+    urlRepo := repository.NewUrlRepository(db)
 
     // service
     userSvc := service.NewUserService(userRepo, log)
     authSvc := service.NewAuthService(userRepo, log)
-    // urlSvc := service.NewUrlService(urlRepo, log)
+    urlSvc := service.NewUrlService(urlRepo, log)
 
     // handler
     userHandler := handler.NewUserHandler(userSvc, log)
     authHandler := handler.NewAuthHandler(authSvc, log)
-    // urlHandler := handler.NewUrlHandler(urlSvc, log)
+    urlHandler := handler.NewUrlHandler(urlSvc, log)
 
     // router
-    r := router.UserRouter(userHandler, authHandler, log)
+    r := router.UserRouter(userHandler, authHandler, urlHandler, log)
     // r := router.UserRouter(userHandler, urlHandler, log)
 
     r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
