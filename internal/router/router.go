@@ -2,8 +2,8 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jonalphabert/url-shortener-golang/handler"
-	"github.com/jonalphabert/url-shortener-golang/logger"
+	"github.com/jonalphabert/url-shortener-golang/internal/handler"
+	"github.com/jonalphabert/url-shortener-golang/internal/logger"
 )
 
 func UserRouter(h *handler.UserHandler, u *handler.UrlHandler, log *logger.LoggerType) *gin.Engine {

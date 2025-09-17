@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jonalphabert/url-shortener-golang/logger"
-	"github.com/jonalphabert/url-shortener-golang/service"
+	"github.com/jonalphabert/url-shortener-golang/internal/logger"
+	"github.com/jonalphabert/url-shortener-golang/internal/service"
 )
 
 type UserHandler struct {

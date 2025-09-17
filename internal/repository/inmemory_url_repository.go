@@ -4,7 +4,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/jonalphabert/url-shortener-golang/models"
+	"github.com/jonalphabert/url-shortener-golang/internal/models"
 )
 
 type InMemoryUrlRepo struct {

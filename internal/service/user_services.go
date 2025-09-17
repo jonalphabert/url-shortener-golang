@@ -3,9 +3,9 @@ package service
 import (
 	"errors"
 
-	"github.com/jonalphabert/url-shortener-golang/logger"
-	"github.com/jonalphabert/url-shortener-golang/models"
-	"github.com/jonalphabert/url-shortener-golang/repository"
+	"github.com/jonalphabert/url-shortener-golang/internal/logger"
+	"github.com/jonalphabert/url-shortener-golang/internal/models"
+	"github.com/jonalphabert/url-shortener-golang/internal/repository"
 )
 
 var ErrInvalidInput = errors.New("invalid input")

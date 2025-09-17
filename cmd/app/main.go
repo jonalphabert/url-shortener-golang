@@ -2,12 +2,12 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jonalphabert/url-shortener-golang/handler"
-	"github.com/jonalphabert/url-shortener-golang/logger"
-	"github.com/jonalphabert/url-shortener-golang/models"
-	"github.com/jonalphabert/url-shortener-golang/repository"
-	"github.com/jonalphabert/url-shortener-golang/router"
-	"github.com/jonalphabert/url-shortener-golang/service"
+	"github.com/jonalphabert/url-shortener-golang/internal/handler"
+	"github.com/jonalphabert/url-shortener-golang/internal/logger"
+	"github.com/jonalphabert/url-shortener-golang/internal/models"
+	"github.com/jonalphabert/url-shortener-golang/internal/repository"
+	"github.com/jonalphabert/url-shortener-golang/internal/router"
+	"github.com/jonalphabert/url-shortener-golang/internal/service"
 )
 
 func main() {

@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/jonalphabert/url-shortener-golang/models"
+import "github.com/jonalphabert/url-shortener-golang/internal/models"
 
 type UrlRepository interface {
     Create(u *models.Url) (*models.Url, error)
