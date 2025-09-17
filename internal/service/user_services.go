@@ -19,22 +19,22 @@ func NewUserService(repo repository.UserRepository, log *logger.LoggerType) *Use
     return &UserService{repo: repo, log: log}
 }
 
-func (s *UserService) CreateUser(name string) (*models.User, error) {
+func (s *UserService) CreateUser(name string) (*models.UserInMemory, error) {
     if name == "" {
         return nil, ErrInvalidInput
     }
-    u := &models.User{Name: name}
+    u := &models.UserInMemory{Name: name}
     return s.repo.Create(u)
 }
 
-func (s *UserService) GetAllUsers() ([]*models.User, error) {
+func (s *UserService) GetAllUsers() ([]*models.UserInMemory, error) {
     return s.repo.GetAll()
 }
 
-func (s *UserService) GetUser(id int) (*models.User, error) {
+func (s *UserService) GetUser(id int) (*models.UserInMemory, error) {
     return s.repo.GetByID(id)
 }
 
-func (s *UserService) DeleteUser(id int) (*models.User, error) {
+func (s *UserService) DeleteUser(id int) (*models.UserInMemory, error) {
     return s.repo.Delete(id)
 }

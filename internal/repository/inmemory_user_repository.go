@@ -11,18 +11,18 @@ var ErrNotFound = errors.New("user not found")
 
 type InMemoryUserRepo struct {
     mu     sync.RWMutex
-    data   map[int]*models.User
+    data   map[int]*models.UserInMemory
     nextID int
 }
 
 func NewInMemoryUserRepo() *InMemoryUserRepo {
     return &InMemoryUserRepo{
-        data:   make(map[int]*models.User),
+        data:   make(map[int]*models.UserInMemory),
         nextID: 1,
     }
 }
 
-func (r *InMemoryUserRepo) Create(u *models.User) (*models.User, error) {
+func (r *InMemoryUserRepo) Create(u *models.UserInMemory) (*models.UserInMemory, error) {
     r.mu.Lock()
     defer r.mu.Unlock()
     u.ID = r.nextID
@@ -33,7 +33,7 @@ func (r *InMemoryUserRepo) Create(u *models.User) (*models.User, error) {
     return &copyU, nil
 }
 
-func (r *InMemoryUserRepo) GetByID(id int) (*models.User, error) {
+func (r *InMemoryUserRepo) GetByID(id int) (*models.UserInMemory, error) {
     r.mu.RLock()
     defer r.mu.RUnlock()
     if u, ok := r.data[id]; ok {
@@ -43,10 +43,10 @@ func (r *InMemoryUserRepo) GetByID(id int) (*models.User, error) {
     return nil, ErrNotFound
 }
 
-func (r *InMemoryUserRepo) GetAll() ([]*models.User, error) {
+func (r *InMemoryUserRepo) GetAll() ([]*models.UserInMemory, error) {
     r.mu.RLock()
     defer r.mu.RUnlock()
-    res := make([]*models.User, 0, len(r.data))
+    res := make([]*models.UserInMemory, 0, len(r.data))
     for _, u := range r.data {
         copyU := *u
         res = append(res, &copyU)
@@ -54,7 +54,7 @@ func (r *InMemoryUserRepo) GetAll() ([]*models.User, error) {
     return res, nil
 }
 
-func (r *InMemoryUserRepo) Delete(id int) (*models.User, error) {
+func (r *InMemoryUserRepo) Delete(id int) (*models.UserInMemory, error) {
     r.mu.Lock()
     defer r.mu.Unlock()
     if u, ok := r.data[id]; ok {

@@ -25,23 +25,24 @@ func main() {
     }
 
     // Koneksi ke DB
-    _, err := db.Connect(os.Getenv("DATABASE_URL"))
+    db, err := db.Connect(os.Getenv("DATABASE_URL"))
     if err != nil {
         log.Fatal(err)
-    } else {
-        log.Info("Connected to DB")
+    } 
+
+    log.Info("Connected to DB")
+    
+
+    // Auto migrate
+    if err := db.AutoMigrate(&models.User{}, &models.Url{}); err != nil {
+        log.Fatal(err)
     }
+
+    log.Info("Migrated DB has been successfully")
 
     // repository (in-memory sekarang)
     userRepo := repository.NewInMemoryUserRepo()
     urlRepo := repository.NewInMemoryUrlRepo()
-
-    // seed data (opsional)
-    userRepo.Create(&models.User{Name: "Jonathan"})
-    userRepo.Create(&models.User{Name: "Seth"})
-    userRepo.Create(&models.User{Name: "John"})
-
-    urlRepo.Create(&models.Url{ShortUrl: "backtracking", LongUrl: "https://chatgpt.com/c/68c8be98-2460-8322-97d2-39028cce4be5"})
 
     // service
     userSvc := service.NewUserService(userRepo, log)
