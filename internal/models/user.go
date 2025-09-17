@@ -8,9 +8,9 @@ type UserInMemory struct {
 }
 
 type User struct {
-    ID        uint      `gorm:"primaryKey"`
-    Username  string    `gorm:"unique;not null"`
-    Password  string    `json:"-"`
+    ID        uint      `gorm:"primaryKey" json:"id"`
+    Username  string    `gorm:"unique;not null" json:"username"`
+    Password  string    `gorm:"not null" json:"password"`
     CreatedAt time.Time
     UpdatedAt time.Time
 

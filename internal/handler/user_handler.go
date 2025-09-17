@@ -26,6 +26,7 @@ func (h *UserHandler) RegisterRoutes(rg *gin.RouterGroup) {
 }
 
 func (h *UserHandler) GetAll(c *gin.Context) {
+    h.log.Info("GetAllUsers called")
     users, err := h.svc.GetAllUsers()
     if err != nil {
         h.log.WithError(err).Error("GetAllUsers failed")
@@ -48,13 +49,14 @@ func (h *UserHandler) GetByID(c *gin.Context) {
 
 func (h *UserHandler) Create(c *gin.Context) {
     var body struct {
-        Name string `json:"name" binding:"required"`
+        Name     string `json:"name" binding:"required"`
+        Password string `json:"password" binding:"required"`
     }
     if err := c.ShouldBindJSON(&body); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": "invalid payload"})
         return
     }
-    user, err := h.svc.CreateUser(body.Name)
+    user, err := h.svc.CreateUser(body.Name, body.Password)
     if err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return

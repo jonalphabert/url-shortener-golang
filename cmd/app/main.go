@@ -41,19 +41,20 @@ func main() {
     log.Info("Migrated DB has been successfully")
 
     // repository (in-memory sekarang)
-    userRepo := repository.NewInMemoryUserRepo()
-    urlRepo := repository.NewInMemoryUrlRepo()
+    userRepo := repository.NewUserRepository(db)
+    // urlRepo := repository.NewInMemoryUrlRepo()
 
     // service
     userSvc := service.NewUserService(userRepo, log)
-    urlSvc := service.NewUrlService(urlRepo, log)
+    // urlSvc := service.NewUrlService(urlRepo, log)
 
     // handler
     userHandler := handler.NewUserHandler(userSvc, log)
-    urlHandler := handler.NewUrlHandler(urlSvc, log)
+    // urlHandler := handler.NewUrlHandler(urlSvc, log)
 
     // router
-    r := router.UserRouter(userHandler, urlHandler, log)
+    r := router.UserRouter(userHandler, log)
+    // r := router.UserRouter(userHandler, urlHandler, log)
 
     r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
 
