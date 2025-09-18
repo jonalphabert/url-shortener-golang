@@ -56,7 +56,6 @@ func main() {
 
     // router
     r := router.UserRouter(userHandler, authHandler, urlHandler, log)
-    // r := router.UserRouter(userHandler, urlHandler, log)
 
     r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
 

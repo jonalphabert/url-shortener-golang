@@ -2,14 +2,11 @@ package service
 
 import (
 	"errors"
-	"os"
-	"time"
-
-	"github.com/golang-jwt/jwt"
 
 	"github.com/jonalphabert/url-shortener-golang/internal/logger"
 	"github.com/jonalphabert/url-shortener-golang/internal/models"
 	"github.com/jonalphabert/url-shortener-golang/internal/repository"
+	"github.com/jonalphabert/url-shortener-golang/internal/utils"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -24,32 +21,6 @@ type AuthServices struct {
 func NewAuthService(repo *repository.UserRepository, log *logger.LoggerType) *AuthServices {
 	return &AuthServices{repo: *repo, log: log}
 }
-func generateJWTToken(userID uint, username string) (string, error) {
-	// Create the JWT claims
-	claims := jwt.MapClaims{
-		"user_id": userID,
-		"username": username,
-		"exp":     time.Now().Add(time.Hour * 24).Unix(), // Token expires in 24 hours
-		"iat":     time.Now().Unix(),
-	}
-
-	// Create token with claims
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	// Get secret key from environment variable
-	secretKey := os.Getenv("JWT_SECRET")
-	if secretKey == "" {
-		secretKey = "your-256-bit-secret" // Fallback secret key
-	}
-
-	// Generate signed token
-	tokenString, err := token.SignedString([]byte(secretKey))
-	if err != nil {
-		return "", err
-	}
-
-	return tokenString, nil
-} 
 
 func (s *AuthServices) Login(username string, password string) (*models.Auth, error) {
 	user, err := s.repo.GetUserByName(username);
@@ -67,7 +38,7 @@ func (s *AuthServices) Login(username string, password string) (*models.Auth, er
 	}
 
 	// Generate JWT token
-	token, err := generateJWTToken(user.ID, username)
+	token, err := utils.GenerateToken(int(user.ID), username)
 	if err != nil {
 		return nil, err
 	}
