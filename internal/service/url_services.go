@@ -108,3 +108,7 @@ func (s *UrlService) UpdateUrl(id int, shortUrl string, longUrl string) (*models
 func (s *UrlService) GetUrlByShortUrl(shortUrl string) (*models.Url, error) {
 	return s.repo.GetByShortUrl(shortUrl)
 }
+
+func (s *UrlService) GetUserUrls(userid int) ([]*models.Url, error) {
+	return s.repo.GetUserUrls(userid)
+}

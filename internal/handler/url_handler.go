@@ -24,6 +24,7 @@ func (h *UrlHandler) RegisterRoutes(rg *gin.RouterGroup) {
 	rg.POST("/urls", h.Create)
 	rg.DELETE("/urls/:id", h.Delete)
 	rg.PATCH("/urls/:id", h.Update)
+	rg.GET("/user/urls", h.GetUserUrls)
 }
 
 func (h *UrlHandler) RegisterRedirectRoutes(rg *gin.RouterGroup) {
@@ -52,8 +53,14 @@ func (h *UrlHandler) GetByID(c *gin.Context) {
 }
 
 func (h *UrlHandler) Create(c *gin.Context) {
+	// get userID from context
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "userID not found"})
+		return
+	}
+
 	var body struct {
-		UserID 		int `json:"user_id" binding:"required"` // required field	uint
 		ShortUrl 	string `json:"short_url" default:""` // required field
 		LongUrl  	string `json:"long_url" binding:"required"`   // required field
 	}
@@ -61,7 +68,7 @@ func (h *UrlHandler) Create(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid payload"})
 		return
 	}
-	url, err := h.svc.CreateUrl(body.UserID, body.ShortUrl, body.LongUrl)
+	url, err := h.svc.CreateUrl(userID.(int), body.ShortUrl, body.LongUrl)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -106,4 +113,21 @@ func (h *UrlHandler) Redirect(c *gin.Context) {
 		return
 	}
 	c.Redirect(http.StatusMovedPermanently, url.LongUrl)
+}
+
+func (h *UrlHandler) GetUserUrls(c *gin.Context) {
+	userID, exists := c.Get("userID")
+
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User is required"})
+		return
+	}
+
+	urls, err := h.svc.GetUserUrls(userID.(int))
+	if err != nil {
+		h.log.WithError(err).Error("GetUserUrls failed")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"urls": urls})
 }

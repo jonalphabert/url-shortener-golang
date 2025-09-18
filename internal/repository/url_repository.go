@@ -57,3 +57,11 @@ func (r *UrlRepository) DeleteUrl(id int) error {
     }
     return nil
 }
+
+func (r *UrlRepository) GetUserUrls(id int) ([]*models.Url, error) {
+    var urls []*models.Url
+    if err := r.db.Where("user_id = ?", id).Find(&urls).Error; err != nil {
+        return nil, err
+    }
+    return urls, nil
+}
